@@ -1,8 +1,9 @@
 *.swp
+.bower.json
 bower_components
 .DS_Store
 node_modules
 build
 spec/build
-ng-modal.zip
-dist/ng-modal.zip
+md-modal.zip
+dist/md-modal.zip
