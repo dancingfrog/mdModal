@@ -1,17 +1,24 @@
 (function() {
   var app;
 
-  app = angular.module("ngModal", []);
+  app = angular.module("mdModal", ['ngMaterial']);
 
-  app.provider("ngModalDefaults", function() {
+  app.provider("mdModalDefaults", function () {
     return {
       options: {
-        closeButtonHtml: "<span class='ng-modal-close-x'>X</span>"
+        closeButtonHtml: '\
+<md-button class="md-icon-button md-modal-close" \
+        type="button" ng-transclude="" \
+        aria-label="Close Modal Dialog" \
+        ng-click="cancel()">\
+    <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Close dialog">clear</md-icon>\
+</md-button>\
+'
       },
-      $get: function() {
+      $get: function () {
         return this.options;
       },
-      set: function(keyOrHash, value) {
+      set: function (keyOrHash, value) {
         var k, v, _results;
         if (typeof keyOrHash === 'object') {
           _results = [];
@@ -27,48 +34,155 @@
     };
   });
 
-  app.directive('modalDialog', [
-    'ngModalDefaults', '$sce', function(ngModalDefaults, $sce) {
-      return {
+  app.directive('mdDraggableModal', [
+    'mdModalDefaults', 
+    '$sce', 
+    '$mdDialog',
+    '$timeout',
+    '$window',
+    function (mdModalDefaults, $sce, $mdDialog, $timeout, $window) {
+        
+        return {
+            compile: function (elm, attrs, trans) {
+                return function (scope, element, attrs) {                    
+                    var setupCloseButton, setupStyle, hideModal, obj, elm = element.parent();
+                    
+                    setupCloseButton = function () {
+                        return scope.closeButtonHtml = $sce.trustAsHtml(mdModalDefaults.closeButtonHtml);
+                    };
+
+                    setupStyle = function () {
+                        scope.dialogStyle = {};
+                        if (attrs.width) {
+                        scope.dialogStyle['width'] = attrs.width;
+                        }
+                        if (attrs.height) {
+                            return scope.dialogStyle['height'] = attrs.height;
+                        }
+                    };  
+
+                    scope.close = function () {
+                        $mdDialog.cancel();
+                    };
+                    
+                    obj = {
+                        id : null,
+                        content : '',
+                        group : null,
+                        opts: {}
+                    };
+                    
+                    scope.placeholder = false;
+                    
+                    obj.content = elm.html();
+
+                    if(angular.isDefined(attrs.id))
+                        obj.id = attrs.id;
+
+                    if(angular.isDefined(attrs.group)) {
+                        obj.group = attrs.group;
+                        scope.options.stack = '.' + obj.group;
+                    }
+
+                    // draggable event handlers
+                    var evts = {
+                        start: function (evt, ui) {
+                          if(scope.placeholder) // ui.helper is jQuery object
+                            ui.helper.wrap('<div class="dragging"></div>');
+
+                          scope.$apply(function () { // emit event in angular context
+                            scope.$emit('draggable.started',{obj: obj});
+                          }); // end $apply
+                        }, // end start
+
+                        drag: function (evt) {
+                          scope.$apply(function () { // emit event in angular context
+                            scope.$emit('draggable.dragging');
+                          }); // end $apply
+                        }, // end drag
+
+                        stop: function (evt, ui) {
+                          if(scope.placeholder)
+                            ui.helper.unwrap();
+
+                          scope.$apply(function () { // emit event in angular context
+                            scope.$emit('draggable.stopped');
+                          }); // end $apply
+                        } // end stop
+                    }; // end evts
+
+                    // combine options and events
+                    elm.draggable(angular.extend({}, scope.options, evts)); // make element draggable
+                    
+                    $window.resizingDialogue = 0;
+
+                    $window.resizeDialogue = function () {
+                        var dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
+                            scrollMask = angular.element('.md-scroll-mask'),
+                            dlgContainer = angular.element('.md-dialog-container');
+
+                        dlgBackground.remove();
+                        
+                        //scrollMask.remove();
+
+                        dlgContainer.css({
+                            "height": "100%"
+                        });
+
+                        return true;
+                    };
+
+                    $window.onresize = function (evt) {
+                        clearTimeout($window.resizingDialogue);
+                        $window.resizing = $timeout($window.resizeDialogue, 333, evt);
+                        return this;
+                    };
+                    
+                    $timeout($window.resizeDialogue, 333, {});
+            
+                    setupCloseButton();
+
+                    return setupStyle();
+                };
+            },
         restrict: 'E',
         scope: {
-          show: '=',
+          id: '=',
           dialogTitle: '@',
+          group: '=',
+          options: '=',
+          show: '=',
+          obj: '=',
           onClose: '&?'
         },
         replace: true,
         transclude: true,
-        link: function(scope, element, attrs) {
-          var setupCloseButton, setupStyle;
-          setupCloseButton = function() {
-            return scope.closeButtonHtml = $sce.trustAsHtml(ngModalDefaults.closeButtonHtml);
-          };
-          setupStyle = function() {
-            scope.dialogStyle = {};
-            if (attrs.width) {
-              scope.dialogStyle['width'] = attrs.width;
-            }
-            if (attrs.height) {
-              return scope.dialogStyle['height'] = attrs.height;
-            }
-          };
-          scope.hideModal = function() {
-            return scope.show = false;
-          };
-          scope.$watch('show', function(newVal, oldVal) {
-            if (newVal && !oldVal) {
-              document.getElementsByTagName("body")[0].style.overflow = "hidden";
-            } else {
-              document.getElementsByTagName("body")[0].style.overflow = "";
-            }
-            if ((!newVal && oldVal) && (scope.onClose != null)) {
-              return scope.onClose();
-            }
-          });
-          setupCloseButton();
-          return setupStyle();
-        },
-        template: "<div class='ng-modal' ng-show='show'>\n  <div class='ng-modal-overlay' ng-click='hideModal()'></div>\n  <div class='ng-modal-dialog' ng-style='dialogStyle'>\n    <span class='ng-modal-title' ng-show='dialogTitle && dialogTitle.length' ng-bind='dialogTitle'></span>\n    <div class='ng-modal-close' ng-click='hideModal()'>\n      <div ng-bind-html='closeButtonHtml'></div>\n    </div>\n    <div class='ng-modal-dialog-content' ng-transclude></div>\n  </div>\n</div>"
+        template: '\
+<form ng-cloak>\
+    <md-toolbar>\
+      <div class="md-toolbar-tools" ng-style="dialogStyle">\
+        <h2 class="md-modal-title" ng-show="dialogTitle && dialogTitle.length" ng-bind="dialogTitle"></h2>\
+        <span flex></span>\
+        <md-button class="md-icon-button md-modal-close" \
+                type="button" ng-transclude="" \
+                aria-label="Close Modal Dialog" \
+                ng-click="close()">\
+            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Close dialog">clear</md-icon>\
+        </md-button>\
+      </div>\
+    </md-toolbar>\
+    <div class="md-dialog-content md-modal-dialog-content" ng-transclude></div>\
+    <md-dialog-actions layout="row">\
+      <md-button href="http://www.pitneybowes.com/us/developer/geocoding-apis.html" target="_blank" md-autofocus>\
+        LI @ Pitney Bowes \
+      </md-button>\
+      <span flex></span>\
+      <md-button aria-label="Close Modal Dialog" ng-click="close()">\
+        CLOSE \
+      </md-button>\
+    </md-dialog-actions>\
+</form>\
+'
       };
     }
   ]);
