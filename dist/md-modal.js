@@ -119,17 +119,20 @@
                     $window.resizingDialogue = 0;
 
                     $window.resizeDialogue = function () {
-                        var dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
-                            scrollMask = angular.element('.md-scroll-mask'),
+                        var doc = angular.element('html'),
+                            dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
                             dlgContainer = angular.element('.md-dialog-container');
+                        
+                        doc.css({
+                            "overflow-y": "hidden"
+                        });
 
                         dlgBackground.remove();
-                        
-                        //scrollMask.remove();
 
                         dlgContainer.css({
                             "height": "100%"
-                        });
+                        });                       
+                        
 
                         return true;
                     };
