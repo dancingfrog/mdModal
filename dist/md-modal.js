@@ -10,7 +10,7 @@
 <md-button class="md-icon-button md-modal-close" \
         type="button" ng-transclude="" \
         aria-label="Close Modal Dialog" \
-        ng-click="cancel()">\
+        ng-click="close()">\
     <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Close dialog">clear</md-icon>\
 </md-button>\
 '
@@ -62,6 +62,8 @@
                     };  
 
                     scope.close = function () {
+                        if (typeof mdModalDefaults.onClose == "function") mdModalDefaults.onClose();
+                        
                         $mdDialog.cancel();
                     };
                     
