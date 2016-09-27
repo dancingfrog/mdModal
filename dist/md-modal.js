@@ -134,11 +134,11 @@
                         return true;
                     };
 
-                    $window.onresize = function (evt) {
+                    $window.addEventListener('onresize', function (evt) {
                         clearTimeout($window.resizingDialogue);
                         $window.resizing = $timeout($window.resizeDialogue, 333, evt);
                         return this;
-                    };
+                    });
                     
                     $timeout($window.resizeDialogue, 333, {});
 
