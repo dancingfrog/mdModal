@@ -5,16 +5,7 @@
 
   app.provider("mdModalDefaults", function () {
     return {
-      options: {
-        closeButtonHtml: '\
-<md-button class="md-icon-button md-modal-close" \
-        type="button" ng-transclude="" \
-        aria-label="Close Modal Dialog" \
-        ng-click="close()">\
-    <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Close dialog">clear</md-icon>\
-</md-button>\
-'
-      },
+      options: {},
       $get: function () {
         return this.options;
       },
@@ -45,11 +36,7 @@
         return {
             compile: function (elm, attrs, trans) {
                 return function (scope, element, attrs) {                    
-                    var setupCloseButton, setupStyle, hideModal, obj, elm = element.parent();
-                    
-                    setupCloseButton = function () {
-                        return scope.closeButtonHtml = $sce.trustAsHtml(mdModalDefaults.closeButtonHtml);
-                    };
+                    var setupStyle, hideModal, obj, elm = element.parent();
 
                     setupStyle = function () {
                         scope.dialogStyle = {};
@@ -59,7 +46,17 @@
                         if (attrs.height) {
                             return scope.dialogStyle['height'] = attrs.height;
                         }
-                    };  
+                    };
+                    
+                    scope.collapse = function () {
+                        elm.addClass("collapsed");
+                        scope.collapsed = true;
+                    };
+                    
+                    scope.expand = function () {
+                        elm.removeClass("collapsed");
+                        scope.collapsed = false;
+                    };
 
                     scope.close = function () {
                         if (typeof mdModalDefaults.onClose == "function") mdModalDefaults.onClose();
@@ -144,8 +141,6 @@
                     };
                     
                     $timeout($window.resizeDialogue, 333, {});
-            
-                    setupCloseButton();
 
                     return setupStyle();
                 };
@@ -168,6 +163,20 @@
       <div class="md-toolbar-tools" ng-style="dialogStyle">\
         <h2 class="md-modal-title" ng-show="dialogTitle && dialogTitle.length" ng-bind="dialogTitle"></h2>\
         <span flex></span>\
+        <md-button class="md-icon-button md-modal-max" \
+                type="button" ng-transclude="" \
+                aria-label="Expand Modal Dialog" \
+                ng-click="expand()" \
+                ng-show="collapsed">\
+            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Expand dialog">expand_more</md-icon>\
+        </md-button>\
+        <md-button class="md-icon-button md-modal-min" \
+                type="button" ng-transclude="" \
+                aria-label="Collapse Modal Dialog" \
+                ng-click="collapse()" \
+                ng-hide="collapsed">\
+            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Collapse dialog">expand_less</md-icon>\
+        </md-button>\
         <md-button class="md-icon-button md-modal-close" \
                 type="button" ng-transclude="" \
                 aria-label="Close Modal Dialog" \
@@ -178,9 +187,6 @@
     </md-toolbar>\
     <div class="md-dialog-content md-modal-dialog-content" ng-transclude></div>\
     <md-dialog-actions layout="row">\
-      <md-button href="http://www.pitneybowes.com/us/developer/geocoding-apis.html" target="_blank" md-autofocus>\
-        LI @ Pitney Bowes \
-      </md-button>\
       <span flex></span>\
       <md-button aria-label="Close Modal Dialog" ng-click="close()">\
         CLOSE \

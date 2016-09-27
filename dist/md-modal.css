@@ -34,13 +34,31 @@
   overflow: hidden;
   height: 100%;
 }
+.md-modal-max {
+  position: absolute;
+  top: 3px;
+  right: 32px;
+  cursor: pointer;
+  font-size: 120%;
+  padding: 4px;
+  display: inline-block;
+}
+.md-modal-min {
+  position: absolute;
+  top: 3px;
+  right: 32px;
+  cursor: pointer;
+  font-size: 120%;
+  padding: 4px;
+  display: inline-block;
+}
 .md-modal-close {
   position: absolute;
   top: 3px;
-  right: 5px;
+  right: 0px;
   cursor: pointer;
   font-size: 120%;
-  padding: 5px;
+  padding: 4px;
   display: inline-block;
 }
 .md-modal-close-x {
@@ -54,4 +72,13 @@
   margin-bottom: 10px;
   padding-bottom: 7px;
   border-bottom: solid 1px #999;
+}
+
+md-dialog.collapsed {
+    max-height: 54px;
+    max-width: 100px;
+}
+
+md-dialog.collapsed form {
+    overflow: hidden;
 }
