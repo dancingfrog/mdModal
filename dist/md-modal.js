@@ -120,8 +120,6 @@
                             dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
                             dlgContainer = angular.element('.md-dialog-container');
                         
-                        $window.alert( "RESIZE" );
-                        
                         doc.css({
                             "overflow-y": "hidden"
                         });
@@ -141,7 +139,7 @@
                         return this;
                     });
                     
-                    $timeout($window.resizeDialogue, 733);
+                    $timeout($window.resizeDialogue, 1233);
 
                     return setupStyle();
                 };
