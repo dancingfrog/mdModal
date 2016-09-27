@@ -74,16 +74,14 @@
 }
 
 md-dialog {
-    min-width: 240px;
     width: 80%;
+    min-width: 240px;
+    max-width: 800px;
     opacity: 1;
 }
 
 md-dialog.collapsed {
     max-height: 54px;
     max-width: 100px;
-}
-
-md-dialog.collapsed form {
     overflow: hidden;
 }

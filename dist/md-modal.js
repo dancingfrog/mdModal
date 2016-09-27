@@ -120,6 +120,8 @@
                             dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
                             dlgContainer = angular.element('.md-dialog-container');
                         
+                        $window.alert( "RESIZE" );
+                        
                         doc.css({
                             "overflow-y": "hidden"
                         });
@@ -128,8 +130,7 @@
 
                         dlgContainer.css({
                             "height": "100%"
-                        });                       
-                        
+                        });
 
                         return true;
                     };
@@ -140,7 +141,7 @@
                         return this;
                     });
                     
-                    $timeout($window.resizeDialogue, 333, {});
+                    $timeout($window.resizeDialogue, 333);
 
                     return setupStyle();
                 };
@@ -158,7 +159,7 @@
         replace: true,
         transclude: true,
         template: '\
-<form ng-cloak>\
+<form ng-cloak onsubmit="function (event) { event.preventDefaults(); return false;}">\
     <md-toolbar>\
       <div class="md-toolbar-tools" ng-style="dialogStyle">\
         <h2 class="md-modal-title" ng-show="dialogTitle && dialogTitle.length" ng-bind="dialogTitle"></h2>\
