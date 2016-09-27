@@ -85,3 +85,8 @@ md-dialog.collapsed {
     max-width: 100px;
     overflow: hidden;
 }
+
+md-dialog.collapsed > form, 
+md-dialog.collapsed > .show {
+    overflow: hidden;
+}
