@@ -141,7 +141,7 @@
                         return this;
                     });
                     
-                    $timeout($window.resizeDialogue, 333);
+                    $timeout($window.resizeDialogue, 733);
 
                     return setupStyle();
                 };
