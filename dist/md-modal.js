@@ -124,7 +124,8 @@
                             "overflow-y": "hidden"
                         });
 
-                        dlgBackground.remove();
+                        if (typeof dlgBackground.fadeOut === 'function') dlgBackground.fadeOut();
+                        else dlgBackground.remove();
 
                         dlgContainer.css({
                             "height": "100%"
