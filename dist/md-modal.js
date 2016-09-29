@@ -111,7 +111,7 @@
                     }; // end evts
 
                     // combine options and events
-                    elm.draggable(angular.extend({}, scope.options, evts)); // make element draggable
+                    //elm.draggable(angular.extend({}, scope.options, evts)); // make element draggable
                     
                     $window.resizingDialogue = 0;
 
@@ -135,8 +135,9 @@
                     };
 
                     $window.addEventListener('onresize', function (evt) {
+                        console.log( "Resizing Dialogue" );
                         clearTimeout($window.resizingDialogue);
-                        $window.resizing = $timeout($window.resizeDialogue, 333, evt);
+                        $window.resizing = $timeout($window.resizeDialogue, 1233, evt);
                         return this;
                     });
                     
@@ -168,14 +169,14 @@
                 aria-label="Expand Modal Dialog" \
                 ng-click="expand()" \
                 ng-show="collapsed">\
-            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Expand dialog">expand_more</md-icon>\
+            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Expand">expand_less</md-icon>\
         </md-button>\
         <md-button class="md-icon-button md-modal-min" \
                 type="button" ng-transclude="" \
                 aria-label="Collapse Modal Dialog" \
                 ng-click="collapse()" \
                 ng-hide="collapsed">\
-            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Collapse dialog">expand_less</md-icon>\
+            <md-icon md-font-icon="material-icons" class="ng-scope md-mxTheme-theme md-font material-icons" aria-label="Collapse">expand_more</md-icon>\
         </md-button>\
         <md-button class="md-icon-button md-modal-close" \
                 type="button" ng-transclude="" \
