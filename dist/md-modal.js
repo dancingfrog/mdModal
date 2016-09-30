@@ -111,7 +111,7 @@
                     }; // end evts
 
                     // combine options and events
-                    //elm.draggable(angular.extend({}, scope.options, evts)); // make element draggable
+                    elm.draggable(angular.extend({}, scope.options, evts)); // make element draggable
                     
                     $window.resizingDialogue = 0;
 
