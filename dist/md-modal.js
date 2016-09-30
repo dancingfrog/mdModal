@@ -117,8 +117,10 @@
 
                     $window.resizeDialogue = function () {
                         var doc = angular.element('html'),
-                            dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
+                            dlgBackground = angular.element('md-backdrop'),
                             dlgContainer = angular.element('.md-dialog-container');
+                        
+                        console.log( "Resizing Dialogue" );
                         
                         doc.css({
                             "overflow-y": "hidden"
@@ -134,12 +136,11 @@
                         return true;
                     };
 
-                    $window.addEventListener('onresize', function (evt) {
-                        console.log( "Resizing Dialogue" );
+                    $window.onresize = function (evt) {
                         clearTimeout($window.resizingDialogue);
-                        $window.resizing = $timeout($window.resizeDialogue, 1233, evt);
+                        $window.resizeDialogue = $timeout($window.resizeDialogue, 1233, evt);
                         return this;
-                    });
+                    };
                     
                     $timeout($window.resizeDialogue, 1233);
 
