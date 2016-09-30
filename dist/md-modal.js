@@ -138,7 +138,7 @@
 
                     $window.addEventListener('resize', function (evt) {
                         clearTimeout($window.resizingDialogue);
-                        $window.resizeDialogue = $timeout($window.resizeDialogue, 1233, evt);
+                        $window.resizingDialogue = $timeout($window.resizeDialogue, 733, evt);
                         return this;
                     });
                     
