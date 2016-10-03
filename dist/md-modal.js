@@ -115,12 +115,12 @@
                     
                     $window.resizingDialogue = 0;
 
-                    $window.resizeDialogue = function () {
+                    $window.resizeDialogue = function (event) {
                         var doc = angular.element('html'),
                             dlgBackground = angular.element('md-backdrop.md-dialog-backdrop.md-mxTheme-theme'),
                             dlgContainer = angular.element('.md-dialog-container');
                         
-                        console.log( "Resizing Dialogue" );
+                        console.log( "Resizing Dialogue: "+ event );
                         
                         doc.css({
                             "overflow-y": "hidden"
@@ -142,7 +142,9 @@
                         return this;
                     });
                     
-                    $timeout($window.resizeDialogue, 1233);
+                    for (var r=1; r<7; r++) {
+                        $timeout($window.resizeDialogue, r*733, { action: "mdMoal.loading" });
+                    }
 
                     return setupStyle();
                 };
