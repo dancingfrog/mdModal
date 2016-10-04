@@ -142,8 +142,8 @@
                         return this;
                     });
                     
-                    for (var r=1; r<7; r++) {
-                        setTimeout($window.resizeDialogue, r*733, { action: "mdModal.loading", target: $window, type: 'resize' });
+                    for (var r=0; (r*33)<2333; r++) {
+                        setTimeout($window.resizeDialogue, r*33, { action: "mdModal.loading", target: $window, type: 'resize' });
                     }
 
                     return setupStyle();
