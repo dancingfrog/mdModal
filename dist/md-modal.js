@@ -190,12 +190,6 @@
       </div>\
     </md-toolbar>\
     <div class="md-dialog-content md-modal-dialog-content" ng-transclude></div>\
-    <md-dialog-actions layout="row">\
-      <span flex></span>\
-      <md-button aria-label="Close Modal Dialog" ng-click="close()">\
-        CLOSE \
-      </md-button>\
-    </md-dialog-actions>\
 </form>\
 '
       };
