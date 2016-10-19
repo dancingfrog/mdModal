@@ -117,7 +117,9 @@
 
                     $window.resizeDialogue = function (event) {
                         var doc = angular.element('html'),
-                            dlgBackground = angular.element('md-backdrop._md-dialog-backdrop'),
+                            dlgBackground = (angular.element('md-backdrop._md-dialog-backdrop')[0])?
+                                angular.element('md-backdrop._md-dialog-backdrop') : 
+                                angular.element('md-backdrop.md-dialog-backdrop') ,
                             dlgContainer = angular.element('.md-dialog-container');
                         
                         console.log( "Resizing Dialogue: "+ (event.action? event.action : event.type) );
